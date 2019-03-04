@@ -25,6 +25,25 @@ describe('Things Endpoints', function() {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
+  describe(`Protected endpoints`, () => {
+    beforeEach('insert things', () =>
+      helpers.seedThingsTables(
+        db,
+        testUsers,
+        testThings,
+        testReviews,
+      )
+    )
+
+    describe(`GET /api/things/:article_id`, () => {
+      it(`responds with 401 'Missing bearer token' when no bearer token`, () => {
+        return supertest(app)
+          .get(`/api/things/2`)
+          .expect(401, { error: `Missing bearer token` })
+      })
+    })
+  })
+
   describe(`GET /api/things`, () => {
     context(`Given no things`, () => {
       it(`responds with 200 and an empty list`, () => {
