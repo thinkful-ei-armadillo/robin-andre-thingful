@@ -75,7 +75,12 @@ describe('Things Endpoints', function() {
         return supertest(app)
           .get('/api/things')
           .set('Authorization', helpers.makeAuthHeader(helpers.makeUsersArray()[1]))
-          .expect(200, expectedThings)
+          .expect(200).expect(res => 
+            { const actualDate = new Date(res.body[0].date_created).toLocaleString();
+              const expectedDate = new Date(expectedThings[0].date_created).toLocaleString('en', { timeZone: 'UTC' });
+              expect(actualDate).to.equal(expectedDate);
+
+            })
       })
     })
 
@@ -140,7 +145,14 @@ describe('Things Endpoints', function() {
         return supertest(app)
           .get(`/api/things/${thingId}`)
           .set('Authorization', helpers.makeAuthHeader(helpers.makeUsersArray()[1]))
-          .expect(200, expectedThing)
+          .expect(200).expect(res =>{
+            const actualDate = new Date(res.body.date_created).toLocaleString();
+              const expectedDate = new Date(expectedThing.date_created).toLocaleString('en', { timeZone: 'UTC' });
+              expect(actualDate).to.equal(expectedDate);
+
+          })
+
+        
       })
     })
 
@@ -202,7 +214,12 @@ describe('Things Endpoints', function() {
         return supertest(app)
           .get(`/api/things/${thingId}/reviews`)
           .set('Authorization', helpers.makeAuthHeader(helpers.makeUsersArray()[1]))
-          .expect(200, expectedReviews)
+          .expect(200).expect(res =>{
+            const actualDate = new Date(res.body[0].date_created).toLocaleString();
+              const expectedDate = new Date(expectedReviews[0].date_created).toLocaleString('en', { timeZone: 'UTC' });
+              expect(actualDate).to.equal(expectedDate);
+
+          })
       })
     })
   })

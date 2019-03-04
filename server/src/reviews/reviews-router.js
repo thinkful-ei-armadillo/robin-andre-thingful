@@ -21,14 +21,14 @@ reviewsRouter
           return res.status(401).json({ error: 'Unauthorized request' });
         }
 
-        req.user = user[0];
+        req.user_id = user[0].id;
         next();
       });
   })
   .post(jsonBodyParser, (req, res, next) => {
-    const { thing_id, rating, text } = req.body;
-    const newReview = { thing_id, rating, text, user_id: req.user.id };
-    console.log(newReview);
+    const { thing_id, rating, text, user_id} = req.body;
+    const newReview = { thing_id, rating, text, user_id:req.user_id};
+   console.log(req.user_id);
 
     for (const [key, value] of Object.entries(newReview))
       if (value == null)
