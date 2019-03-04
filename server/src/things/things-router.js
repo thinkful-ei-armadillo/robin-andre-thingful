@@ -15,15 +15,15 @@ thingsRouter
 
 thingsRouter
   .route('/:thing_id')
-  .all(requireAuth)
   .all(checkThingExists)
+  .all(requireAuth)
   .get((req, res) => {
     res.json(ThingsService.serializeThing(res.thing))
   })
 
 thingsRouter.route('/:thing_id/reviews/')
-  .all(requireAuth)
   .all(checkThingExists)
+  .all(requireAuth)
   .get((req, res, next) => {
     ThingsService.getReviewsForThing(
       req.app.get('db'),
