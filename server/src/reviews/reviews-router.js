@@ -9,7 +9,7 @@ reviewsRouter
   .route('/')
   .all((req, res, next) => {
     // get user id from username
-    const token = req.get('Authorization').slice(7);
+    const token = req.get('Authorization').slice(7) || '';
     const unpw = Buffer.from(token, 'base64').toString().split(':');
 
     req.app.get('db')
