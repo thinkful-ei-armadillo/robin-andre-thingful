@@ -7,9 +7,28 @@ const jsonBodyParser = express.json()
 
 reviewsRouter
   .route('/')
+  .all((req, res, next) => {
+    // get user id from username
+    const token = req.get('Authorization').slice(7);
+    const unpw = Buffer.from(token, 'base64').toString().split(':');
+
+    req.app.get('db')
+      .select('*')
+      .from('thingful_users')
+      .where('user_name', unpw[0])
+      .then(user => {
+        if(! user || user[0].password !== unpw[1]) {
+          return res.status(401).json({ error: 'Unauthorized request' });
+        }
+
+        req.user = user[0];
+        next();
+      });
+  })
   .post(jsonBodyParser, (req, res, next) => {
-    const { thing_id, rating, text, user_id } = req.body
-    const newReview = { thing_id, rating, text, user_id }
+    const { thing_id, rating, text } = req.body;
+    const newReview = { thing_id, rating, text, user_id: req.user.id };
+    console.log(newReview);
 
     for (const [key, value] of Object.entries(newReview))
       if (value == null)
